@@ -78,13 +78,13 @@ router.post('/', async (req, res, next) => {
       status: 'pending',
     });
 
-    res.status(201).json({ order });
+   try {
+  await sendOrderNotification(order.toJSON());
+} catch (err) {
+  console.error('Failed to send order notification email:', err.message);
+}
 
-    // Fire-and-forget: a failed or unconfigured mail setup should never
-    // fail the order itself — the response above has already gone out.
-    sendOrderNotification(order.toJSON()).catch((err) =>
-      console.error('Failed to send order notification email:', err.message)
-    );
+res.status(201).json({ order });
   } catch (err) {
     next(err);
   }
