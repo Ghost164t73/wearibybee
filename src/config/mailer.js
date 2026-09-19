@@ -34,9 +34,9 @@ function getTransporter() {
 }
 
 function formatOrderEmail(order) {
-  const itemLines = order.items.map((i) => `  - ${i.name} x${i.qty} — $${i.lineTotal}`).join('\n');
+  const itemLines = order.items.map((i) => `  - ${i.name} x${i.qty} — ₦${i.lineTotal}`).join('\n');
   const itemRows = order.items
-    .map((i) => `<tr><td style="padding:4px 10px 4px 0">${i.name}</td><td style="padding:4px 10px">x${i.qty}</td><td style="padding:4px 0">$${i.lineTotal}</td></tr>`)
+    .map((i) => `<tr><td style="padding:4px 10px 4px 0">${i.name}</td><td style="padding:4px 10px">x${i.qty}</td><td style="padding:4px 0">₦${i.lineTotal}</td></tr>`)
     .join('');
 
   const text = `New order ${order.id}
@@ -50,7 +50,7 @@ Notes: ${order.customer.notes || '—'}
 Items:
 ${itemLines}
 
-Subtotal: $${order.subtotal}
+Subtotal: ₦${order.subtotal}
 Status: ${order.status}
 Placed: ${order.createdAt}
 
@@ -64,7 +64,7 @@ on WhatsApp. Confirm it there before marking this order as paid.`;
     <p style="font-family:sans-serif"><strong>Address:</strong> ${order.customer.address || '—'}</p>
     ${order.customer.notes ? `<p style="font-family:sans-serif"><strong>Notes:</strong> ${order.customer.notes}</p>` : ''}
     <table style="font-family:sans-serif; border-collapse:collapse">${itemRows}</table>
-    <p style="font-family:sans-serif"><strong>Subtotal:</strong> $${order.subtotal}</p>
+    <p style="font-family:sans-serif"><strong>Subtotal:</strong> ₦${order.subtotal}</p>
     <p style="font-family:sans-serif"><strong>Status:</strong> ${order.status}</p>
     <p style="font-family:sans-serif; color:#7A4FB0">
       Bank transfer order — the customer has been asked to send their payment
@@ -90,7 +90,7 @@ async function sendOrderNotification(order) {
   await t.sendMail({
     from: EMAIL_FROM || SMTP_USER,
     to: ADMIN_EMAIL,
-    subject: `New order ${order.id} — ${order.customer.name} ($${order.subtotal})`,
+    subject: `New order ${order.id} — ${order.customer.name} (₦${order.subtotal})`,
     text,
     html,
   });
