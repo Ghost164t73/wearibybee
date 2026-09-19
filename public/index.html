@@ -504,6 +504,8 @@
     <div class="checkout-fields">
       <input type="text" id="checkoutName" placeholder="Full name" aria-label="Full name" autocomplete="name">
       <input type="email" id="checkoutEmail" placeholder="you@email.com" aria-label="Email address" autocomplete="email">
+      <input type="tel" id="checkoutPhone" placeholder="Phone number" aria-label="Phone number" autocomplete="tel">
+      <input type="text" id="checkoutAddress" placeholder="Delivery address" aria-label="Delivery address" autocomplete="street-address">
     </div>
     <p class="checkout-error" id="checkoutError"></p>
     <button class="checkout-btn" id="checkoutBtn" disabled>Checkout</button>
@@ -657,7 +659,7 @@ function renderCart(){
   if(cart.length===0){
     cartItemsEl.innerHTML = '<p class="cart-empty">Your bag is empty.</p>';
     checkoutBtn.disabled = true;
-    cartSubtotalEl.textContent = '$0';
+    cartSubtotalEl.textContent = '₦0';
     return;
   }
 
@@ -755,6 +757,8 @@ document.getElementById('paymentDoneBtn').addEventListener('click', closePayment
 
 const checkoutNameEl = document.getElementById('checkoutName');
 const checkoutEmailEl = document.getElementById('checkoutEmail');
+const checkoutPhoneEl = document.getElementById('checkoutPhone');
+const checkoutAddressEl = document.getElementById('checkoutAddress');
 const checkoutErrorEl = document.getElementById('checkoutError');
 
 checkoutBtn.addEventListener('click', async ()=>{
@@ -762,8 +766,10 @@ checkoutBtn.addEventListener('click', async ()=>{
 
   const name = checkoutNameEl.value.trim();
   const email = checkoutEmailEl.value.trim();
-  if(!name || !email){
-    checkoutErrorEl.textContent = 'Please add your name and email to check out.';
+  const phone = checkoutPhoneEl.value.trim();
+  const address = checkoutAddressEl.value.trim();
+  if(!name || !email || !phone || !address){
+    checkoutErrorEl.textContent = 'Please add your name, email, phone number and delivery address to check out.';
     return;
   }
 
@@ -776,7 +782,7 @@ checkoutBtn.addEventListener('click', async ()=>{
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         items: cart.map(i=>({id:i.id, qty:i.qty})),
-        customer: {name, email}
+        customer: {name, email, phone, address}
       })
     });
     const data = await res.json();
@@ -785,6 +791,8 @@ checkoutBtn.addEventListener('click', async ()=>{
     cart = [];
     checkoutNameEl.value = '';
     checkoutEmailEl.value = '';
+    checkoutPhoneEl.value = '';
+    checkoutAddressEl.value = '';
     renderCart();
     closeCart();
     openPaymentModal(data.order);

@@ -11,6 +11,7 @@ const productsRouter = require('./src/routes/products');
 const ordersRouter = require('./src/routes/orders');
 const newsletterRouter = require('./src/routes/newsletter');
 const adminProductsRouter = require('./src/routes/adminProducts');
+const adminOrdersRouter = require('./src/routes/adminOrders');
 const paymentInfoRouter = require('./src/routes/paymentInfo');
 
 const app = express();
@@ -25,6 +26,7 @@ app.use('/api/products', productsRouter);
 app.use('/api/orders', ordersRouter);
 app.use('/api/newsletter', newsletterRouter);
 app.use('/api/admin/products', adminProductsRouter);
+app.use('/api/admin/orders', adminOrdersRouter);
 app.use('/api/payment-info', paymentInfoRouter);
 
 app.use('/api', (req, res) => res.status(404).json({ error: 'Not found.' }));

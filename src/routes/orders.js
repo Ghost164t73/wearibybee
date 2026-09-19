@@ -17,10 +17,16 @@ function validateCustomer(customer) {
   if (!customer.email || typeof customer.email !== 'string' || !EMAIL_RE.test(customer.email.trim())) {
     return 'Please enter a valid email address.';
   }
+  if (!customer.phone || typeof customer.phone !== 'string' || !customer.phone.trim()) {
+    return 'Please enter your phone number.';
+  }
+  if (!customer.address || typeof customer.address !== 'string' || !customer.address.trim()) {
+    return 'Please enter your delivery address.';
+  }
   return null;
 }
 
-// POST /api/orders  { items: [{id, qty}], customer: {name, email, phone?, address?, notes?} }
+// POST /api/orders  { items: [{id, qty}], customer: {name, email, phone, address, notes?} }
 router.post('/', async (req, res, next) => {
   try {
     const { items, customer } = req.body || {};

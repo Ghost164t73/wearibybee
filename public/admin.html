@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wearit by Bee — Product Admin</title>
+<title>Wearit by Bee — Admin</title>
 <style>
   :root{
     --ink:#150B23; --plum:#20102F; --plum-2:#2B1240; --line:rgba(203,169,255,0.16);
@@ -56,12 +56,25 @@
     transition:opacity .2s, transform .2s;
   }
   .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  .status-select{
+    background:var(--plum-2); border:1px solid var(--line); color:var(--bone); border-radius:6px;
+    padding:6px 8px; font-size:12.5px; font-weight:600;
+  }
+  .status-select.pending{color:#F5C451;}
+  .status-select.paid{color:var(--green);}
+  .status-select.fulfilled{color:var(--violet-bright);}
+  .status-select.cancelled{color:var(--red);}
+  .items-summary{font-size:12px; color:var(--paper-2); opacity:0.85; max-width:220px;}
+  .filter-row{display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;}
+  .filter-row button{background:transparent; border:1px solid var(--line); color:var(--paper-2); padding:6px 12px; font-size:12.5px;}
+  .filter-row button.active{background:var(--violet); color:var(--bone); border-color:var(--violet);}
 </style>
 </head>
 <body>
 
-<h1>Wearit by Bee — Product Admin</h1>
-<p class="sub">Manage the catalog and upload product photos to Cloudinary.</p>
+<h1>Wearit by Bee — Admin</h1>
+<p class="sub">Manage the catalog, product photos, and order status.</p>
 
 <div class="panel">
   <h2>Admin key</h2>
@@ -70,6 +83,23 @@
     <button id="saveKeyBtn">Save</button>
     <span class="key-status" id="keyStatus">Not set</span>
   </div>
+</div>
+
+<div class="panel">
+  <h2>Orders</h2>
+  <div class="filter-row" id="orderFilters">
+    <button data-status="all" class="active">All</button>
+    <button data-status="pending">Pending</button>
+    <button data-status="paid">Paid</button>
+    <button data-status="fulfilled">Fulfilled</button>
+    <button data-status="cancelled">Cancelled</button>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Order</th><th>Customer</th><th>Items</th><th>Subtotal</th><th>Placed</th><th>Status</th></tr>
+    </thead>
+    <tbody id="orderRows"><tr><td colspan="6">Loading…</td></tr></tbody>
+  </table>
 </div>
 
 <div class="panel">
@@ -85,7 +115,7 @@
       </select>
     </label>
     <label>Category label <input id="newCatLabel" placeholder="Ready-to-wear"></label>
-    <label>Price (NGN) <input id="newPrice" type="number" min="0" step="0.01" placeholder="85"></label>
+    <label>Price (₦) <input id="newPrice" type="number" min="0" step="0.01" placeholder="85"></label>
     <label>Badge (optional) <input id="newBadge" placeholder="New"></label>
     <label>Color <input id="newColor" type="color" value="#7A4FB0"></label>
   </div>
@@ -144,6 +174,74 @@ document.getElementById('saveKeyBtn').addEventListener('click', () => {
   localStorage.setItem('wbb_admin_key', keyInput.value.trim());
   refreshKeyStatus();
   toast('Admin key saved.');
+});
+
+// ---------- Orders ----------
+let orders = [];
+let orderFilter = 'all';
+const STATUS_VALUES = ['pending', 'paid', 'fulfilled', 'cancelled'];
+
+async function loadOrders(){
+  try {
+    const qs = orderFilter !== 'all' ? `?status=${orderFilter}` : '';
+    const { orders: fetched } = await api(`/admin/orders${qs}`);
+    orders = fetched;
+    renderOrderRows();
+  } catch (err) {
+    document.getElementById('orderRows').innerHTML = `<tr><td colspan="6">Couldn't load orders: ${err.message}</td></tr>`;
+  }
+}
+
+function renderOrderRows(){
+  const body = document.getElementById('orderRows');
+  if (orders.length === 0){
+    body.innerHTML = '<tr><td colspan="6">No orders here.</td></tr>';
+    return;
+  }
+  body.innerHTML = orders.map(o => `
+    <tr data-id="${o.id}">
+      <td><strong>${o.id}</strong></td>
+      <td>${o.customer.name}<br><span style="opacity:.6">${o.customer.email}</span></td>
+      <td class="items-summary">${o.items.map(i => `${i.name} ×${i.qty}`).join(', ')}</td>
+      <td>₦${o.subtotal}</td>
+      <td>${new Date(o.createdAt).toLocaleDateString()}</td>
+      <td>
+        <select class="status-select ${o.status}" data-action="status" data-id="${o.id}">
+          ${STATUS_VALUES.map(s => `<option value="${s}" ${s === o.status ? 'selected' : ''}>${s[0].toUpperCase()+s.slice(1)}</option>`).join('')}
+        </select>
+      </td>
+    </tr>
+  `).join('');
+}
+
+document.getElementById('orderFilters').addEventListener('click', e => {
+  const btn = e.target.closest('button[data-status]');
+  if (!btn) return;
+  orderFilter = btn.dataset.status;
+  document.querySelectorAll('#orderFilters button').forEach(b => b.classList.toggle('active', b === btn));
+  loadOrders();
+});
+
+document.getElementById('orderRows').addEventListener('change', async e => {
+  const select = e.target.closest('select[data-action="status"]');
+  if (!select) return;
+  const id = select.dataset.id;
+  const status = select.value;
+  select.disabled = true;
+  try {
+    const { order } = await api(`/admin/orders/${id}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status }),
+    });
+    orders = orders.map(o => (o.id === id ? order : o));
+    select.className = `status-select ${order.status}`;
+    toast(`${id} marked as ${order.status}.`);
+  } catch (err) {
+    toast(err.message);
+    loadOrders(); // revert the dropdown to the real value
+  } finally {
+    select.disabled = false;
+  }
 });
 
 // ---------- Catalog ----------
@@ -253,6 +351,7 @@ document.getElementById('addBtn').addEventListener('click', async () => {
 });
 
 loadProducts();
+loadOrders();
 </script>
 </body>
 </html>
