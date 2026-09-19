@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wearit by Bee — Product Admin</title>
+<style>
+  :root{
+    --ink:#150B23; --plum:#20102F; --plum-2:#2B1240; --line:rgba(203,169,255,0.16);
+    --bone:#FBF8FF; --paper-2:#EAE0FB; --violet:#7A4FB0; --violet-bright:#9B6FD8;
+    --red:#FF6B6B; --green:#4ADE80; --font:'Segoe UI', system-ui, sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--ink); color:var(--bone); font-family:var(--font); padding:32px; line-height:1.5;}
+  h1{font-size:22px; margin-bottom:4px;}
+  .sub{color:var(--paper-2); opacity:0.7; font-size:13px; margin-bottom:24px;}
+  input, select, button{font-family:inherit; font-size:14px;}
+  input, select{
+    background:var(--plum-2); border:1px solid var(--line); color:var(--bone);
+    border-radius:6px; padding:8px 10px;
+  }
+  button{
+    background:var(--violet); border:none; color:var(--bone); border-radius:6px;
+    padding:8px 14px; font-weight:600; cursor:pointer;
+  }
+  button:hover{background:var(--violet-bright);}
+  button.danger{background:transparent; border:1px solid var(--red); color:var(--red);}
+  button.danger:hover{background:rgba(255,107,107,0.12);}
+  button.ghost{background:transparent; border:1px solid var(--line); color:var(--paper-2);}
+  button:disabled{opacity:0.5; cursor:not-allowed;}
+
+  .panel{background:var(--plum); border:1px solid var(--line); border-radius:10px; padding:20px; margin-bottom:24px;}
+  .panel h2{font-size:15px; margin-bottom:14px;}
+  .key-row{display:flex; gap:10px; align-items:center; flex-wrap:wrap;}
+  .key-row input{flex:1; min-width:220px;}
+  .key-status{font-size:12px; color:var(--paper-2); opacity:0.7;}
+
+  .form-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(140px,1fr)); gap:10px; margin-bottom:12px;}
+  .form-grid label{display:flex; flex-direction:column; gap:4px; font-size:12px; color:var(--paper-2);}
+
+  table{width:100%; border-collapse:collapse;}
+  th, td{text-align:left; padding:10px 8px; border-bottom:1px solid var(--line); font-size:13px; vertical-align:middle;}
+  th{color:var(--paper-2); opacity:0.7; font-size:11px; text-transform:uppercase; letter-spacing:0.04em;}
+  .thumb{width:52px; height:52px; border-radius:8px; object-fit:cover; background:var(--plum-2); display:block;}
+  .thumb-placeholder{
+    width:52px; height:52px; border-radius:8px; background:var(--plum-2); display:flex; align-items:center;
+    justify-content:center; font-size:10px; color:var(--paper-2); opacity:0.5; text-align:center;
+  }
+  .row-actions{display:flex; gap:6px; flex-wrap:wrap;}
+  .file-btn{position:relative; overflow:hidden; display:inline-block;}
+  .file-btn input[type=file]{position:absolute; inset:0; opacity:0; cursor:pointer;}
+  .swatch{display:inline-block; width:14px; height:14px; border-radius:4px; vertical-align:middle; margin-right:6px; border:1px solid var(--line);}
+  .toast{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--plum-2);
+    border:1px solid var(--line); padding:10px 18px; border-radius:8px; font-size:13px; opacity:0; pointer-events:none;
+    transition:opacity .2s, transform .2s;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<h1>Wearit by Bee — Product Admin</h1>
+<p class="sub">Manage the catalog and upload product photos to Cloudinary.</p>
+
+<div class="panel">
+  <h2>Admin key</h2>
+  <div class="key-row">
+    <input type="password" id="adminKey" placeholder="x-admin-key value">
+    <button id="saveKeyBtn">Save</button>
+    <span class="key-status" id="keyStatus">Not set</span>
+  </div>
+</div>
+
+<div class="panel">
+  <h2>Add a product</h2>
+  <div class="form-grid">
+    <label>ID <input id="newId" placeholder="p7"></label>
+    <label>Name <input id="newName" placeholder="Coral Kimono"></label>
+    <label>Category
+      <select id="newCat">
+        <option value="ready-to-wear">Ready-to-wear</option>
+        <option value="bespoke">Bespoke</option>
+        <option value="accessories">Accessories</option>
+      </select>
+    </label>
+    <label>Category label <input id="newCatLabel" placeholder="Ready-to-wear"></label>
+    <label>Price (NGN) <input id="newPrice" type="number" min="0" step="0.01" placeholder="85"></label>
+    <label>Badge (optional) <input id="newBadge" placeholder="New"></label>
+    <label>Color <input id="newColor" type="color" value="#7A4FB0"></label>
+  </div>
+  <button id="addBtn">Add product</button>
+</div>
+
+<div class="panel">
+  <h2>Catalog</h2>
+  <table>
+    <thead>
+      <tr><th>Image</th><th>Product</th><th>Category</th><th>Price</th><th>Badge</th><th>Color</th><th>Actions</th></tr>
+    </thead>
+    <tbody id="rows"><tr><td colspan="7">Loading…</td></tr></tbody>
+  </table>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API_BASE = '/api';
+
+function adminKey(){ return localStorage.getItem('wbb_admin_key') || ''; }
+
+async function api(path, options = {}) {
+  const res = await fetch(API_BASE + path, {
+    ...options,
+    headers: {
+      ...(options.body && !(options.body instanceof FormData) ? { 'Content-Type': 'application/json' } : {}),
+      'x-admin-key': adminKey(),
+      ...(options.headers || {}),
+    },
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || 'Request failed.');
+  return data;
+}
+
+let toastTimer;
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
+}
+
+// ---------- Admin key ----------
+const keyInput = document.getElementById('adminKey');
+const keyStatus = document.getElementById('keyStatus');
+function refreshKeyStatus(){
+  keyStatus.textContent = adminKey() ? 'Key saved in this browser' : 'Not set';
+}
+keyInput.value = adminKey();
+refreshKeyStatus();
+document.getElementById('saveKeyBtn').addEventListener('click', () => {
+  localStorage.setItem('wbb_admin_key', keyInput.value.trim());
+  refreshKeyStatus();
+  toast('Admin key saved.');
+});
+
+// ---------- Catalog ----------
+let products = [];
+
+async function loadProducts(){
+  try {
+    const { products: fetched } = await api('/admin/products');
+    products = fetched;
+    renderRows();
+  } catch (err) {
+    document.getElementById('rows').innerHTML = `<tr><td colspan="7">Couldn't load products: ${err.message}</td></tr>`;
+  }
+}
+
+function renderRows(){
+  const body = document.getElementById('rows');
+  if (products.length === 0){
+    body.innerHTML = '<tr><td colspan="7">No products yet.</td></tr>';
+    return;
+  }
+  body.innerHTML = products.map(p => `
+    <tr data-id="${p.id}">
+      <td>${p.image && p.image.url
+        ? `<img class="thumb" src="${p.image.url}" alt="${p.name}">`
+        : `<span class="thumb-placeholder">No image</span>`}</td>
+      <td><strong>${p.name}</strong><br><span style="opacity:.6">${p.id}</span></td>
+      <td>${p.catLabel}</td>
+      <td>₦${p.price}</td>
+      <td>${p.badge || '—'}</td>
+      <td><span class="swatch" style="background:${p.color}"></span>${p.color}</td>
+      <td>
+        <div class="row-actions">
+          <span class="file-btn"><button class="ghost">Upload photo</button><input type="file" accept="image/*" data-action="upload" data-id="${p.id}"></span>
+          ${p.image && p.image.url ? `<button class="ghost" data-action="remove-image" data-id="${p.id}">Remove photo</button>` : ''}
+          <button class="danger" data-action="delete" data-id="${p.id}">Delete</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+document.getElementById('rows').addEventListener('change', async e => {
+  const input = e.target.closest('input[data-action="upload"]');
+  if (!input || !input.files[0]) return;
+  const id = input.dataset.id;
+  const formData = new FormData();
+  formData.append('image', input.files[0]);
+  try {
+    toast('Uploading…');
+    const { product } = await api(`/admin/products/${id}/image`, { method: 'POST', body: formData });
+    products = products.map(p => (p.id === id ? product : p));
+    renderRows();
+    toast('Image uploaded.');
+  } catch (err) {
+    toast(err.message);
+  }
+});
+
+document.getElementById('rows').addEventListener('click', async e => {
+  const btn = e.target.closest('button[data-action]');
+  if (!btn) return;
+  const id = btn.dataset.id;
+
+  if (btn.dataset.action === 'remove-image'){
+    try {
+      const { product } = await api(`/admin/products/${id}/image`, { method: 'DELETE' });
+      products = products.map(p => (p.id === id ? product : p));
+      renderRows();
+      toast('Image removed.');
+    } catch (err) { toast(err.message); }
+  }
+
+  if (btn.dataset.action === 'delete'){
+    if (!confirm(`Delete product "${id}"? This can't be undone.`)) return;
+    try {
+      await api(`/admin/products/${id}`, { method: 'DELETE' });
+      products = products.filter(p => p.id !== id);
+      renderRows();
+      toast('Product deleted.');
+    } catch (err) { toast(err.message); }
+  }
+});
+
+document.getElementById('addBtn').addEventListener('click', async () => {
+  const body = {
+    id: document.getElementById('newId').value.trim(),
+    name: document.getElementById('newName').value.trim(),
+    cat: document.getElementById('newCat').value,
+    catLabel: document.getElementById('newCatLabel').value.trim(),
+    price: parseFloat(document.getElementById('newPrice').value),
+    badge: document.getElementById('newBadge').value.trim() || null,
+    color: document.getElementById('newColor').value,
+  };
+  if (!body.id || !body.name || !body.catLabel || Number.isNaN(body.price)) {
+    return toast('Please fill in id, name, category label and price.');
+  }
+  try {
+    const { product } = await api('/admin/products', { method: 'POST', body: JSON.stringify(body) });
+    products.push(product);
+    renderRows();
+    ['newId','newName','newCatLabel','newPrice','newBadge'].forEach(id => document.getElementById(id).value = '');
+    toast('Product added — now upload a photo for it.');
+  } catch (err) {
+    toast(err.message);
+  }
+});
+
+loadProducts();
+</script>
+</body>
+</html>

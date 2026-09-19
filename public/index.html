@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wearit by Bee — Bespoke & Ready-to-Wear</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#170F1D;
+    --plum:#271A31;
+    --plum-2:#38243F;
+    --plum-3:#4A2E52;
+    --violet:#7A4FB0;
+    --violet-bright:#9A6FD1;
+    --lilac:#C9AEE0;
+    --bone:#F6F1EA;
+    --paper-2:#E9DFF0;
+    --gold:#CBA35C;
+    --line: rgba(201,174,224,0.16);
+    --shadow-hard: 6px 6px 0 rgba(0,0,0,0.3);
+    --font-display: 'Fraunces', serif;
+    --font-body: 'Manrope', sans-serif;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ink);
+    color:var(--bone);
+    font-family:var(--font-body);
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  img,svg{display:block; max-width:100%;}
+  a{color:inherit; text-decoration:none;}
+  ul{list-style:none;}
+  button{font-family:inherit; cursor:pointer; border:none; background:none; color:inherit;}
+  .wrap{max-width:1240px; margin:0 auto; padding:0 32px;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
+  }
+
+  :focus-visible{outline:3px solid var(--gold); outline-offset:3px;}
+
+  h1,h2,h3,h4{font-family:var(--font-display); font-weight:600; line-height:1.08; letter-spacing:-0.01em;}
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky; top:0; z-index:200;
+    background:rgba(23,15,29,0.9);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 32px;
+    max-width:1240px; margin:0 auto;
+  }
+  .logo{display:flex; align-items:center; gap:10px;}
+  .logo-mark{width:30px; height:30px; flex-shrink:0;}
+  .logo-text{font-family:var(--font-display); font-weight:600; font-size:19px; letter-spacing:0.02em; line-height:1.1;}
+  .logo-text span{display:block; font-family:var(--font-body); font-weight:600; font-size:9px; letter-spacing:0.16em; color:var(--lilac); opacity:0.8; text-transform:uppercase; margin-top:2px;}
+  .nav-links{display:flex; gap:36px; font-weight:600; font-size:14.5px;}
+  .nav-links a{position:relative; padding:4px 0; opacity:0.85; transition:opacity .15s;}
+  .nav-links a:hover{opacity:1;}
+  .nav-links a::after{
+    content:""; position:absolute; left:0; bottom:0; width:0; height:1.5px; background:var(--gold);
+    transition:width .2s ease;
+  }
+  .nav-links a:hover::after{width:100%;}
+  .nav-right{display:flex; align-items:center; gap:22px;}
+  .icon-btn{position:relative; width:40px; height:40px; display:flex; align-items:center; justify-content:center; border:1px solid var(--line); border-radius:50%; transition:border-color .15s, transform .15s;}
+  .icon-btn:hover{border-color:var(--lilac); transform:translateY(-1px);}
+  .cart-count{
+    position:absolute; top:-6px; right:-6px; background:var(--gold); color:var(--ink);
+    font-size:11px; font-weight:800; min-width:18px; height:18px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; padding:0 2px;
+  }
+  .menu-toggle{display:none;}
+
+  /* ---------- Marquee ---------- */
+  .marquee{
+    background:var(--gold); color:var(--ink); overflow:hidden; white-space:nowrap;
+    border-bottom:1px solid var(--ink);
+  }
+  .marquee-track{
+    display:inline-flex; gap:40px; padding:9px 0;
+    animation: scroll-left 30s linear infinite;
+    font-weight:700; font-size:12.5px; text-transform:uppercase; letter-spacing:0.05em;
+  }
+  .marquee-track span{display:flex; align-items:center; gap:40px;}
+  @keyframes scroll-left{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;
+    padding:96px 32px 80px;
+    background:
+      radial-gradient(700px 420px at 82% 8%, rgba(122,79,176,0.45), transparent 60%),
+      radial-gradient(500px 400px at 10% 90%, rgba(201,174,224,0.12), transparent 65%),
+      var(--ink);
+    overflow:hidden;
+  }
+  .hero-inner{
+    max-width:1240px; margin:0 auto;
+    display:grid; grid-template-columns:1.3fr 0.9fr; gap:48px; align-items:end;
+  }
+  .hero-eyebrow{
+    font-size:14px; font-weight:600; color:var(--lilac); margin-bottom:18px;
+    max-width:360px;
+  }
+  .hero h1{
+    font-size:clamp(46px, 6.6vw, 88px);
+    color:var(--bone);
+    font-weight:500;
+  }
+  .hero h1 em{font-style:italic; color:var(--gold); font-weight:500;}
+  .hero-sub{
+    margin-top:28px; font-size:17px; color:var(--paper-2); max-width:430px; opacity:0.85;
+  }
+  .hero-cta{display:flex; gap:16px; margin-top:36px; flex-wrap:wrap;}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; padding:15px 28px;
+    font-weight:700; font-size:14.5px; border-radius:2px; transition:transform .15s, background .15s, color .15s;
+  }
+  .btn-solid{background:var(--gold); color:var(--ink);}
+  .btn-solid:hover{transform:translate(-2px,-2px); box-shadow:var(--shadow-hard);}
+  .btn-outline{border:1.5px solid var(--lilac); color:var(--bone);}
+  .btn-outline:hover{background:var(--lilac); color:var(--ink);}
+
+  .hero-visual{
+    position:relative; justify-self:end; width:100%; max-width:320px;
+  }
+  .hero-card{
+    background:var(--plum); border:1px solid var(--line); padding:26px;
+    transform:rotate(2deg);
+    box-shadow:14px 14px 0 rgba(0,0,0,0.28);
+  }
+  .hero-card .tag{font-size:11.5px; font-weight:700; color:var(--gold); margin-bottom:14px; display:block; letter-spacing:0.04em; text-transform:uppercase;}
+  .hero-card h3{font-size:21px; margin-bottom:6px; font-weight:500;}
+  .hero-card p{font-size:13px; color:var(--paper-2); opacity:0.75;}
+
+  /* ---------- Section headings ---------- */
+  .section{padding:100px 32px;}
+  .section-head{
+    display:flex; justify-content:space-between; align-items:flex-end; gap:24px;
+    margin-bottom:56px; flex-wrap:wrap;
+  }
+  .section-head h2{font-size:clamp(30px, 3.8vw, 46px); font-weight:500;}
+  .section-head p{max-width:340px; color:var(--paper-2); opacity:0.8; font-size:15px;}
+  .section-num{font-family:var(--font-body); font-size:12.5px; color:var(--gold); font-weight:700; margin-bottom:10px; display:block; letter-spacing:0.06em; text-transform:uppercase;}
+
+  /* ---------- About ---------- */
+  .manifesto{background:var(--plum);}
+  .manifesto-grid{display:grid; grid-template-columns:0.9fr 1.1fr; gap:60px; align-items:start;}
+  .manifesto-grid h2{font-size:clamp(28px,3.6vw,40px); color:var(--bone); font-weight:500;}
+  .manifesto-list{display:flex; flex-direction:column; gap:0;}
+  .m-item{padding:26px 0; border-top:1px solid var(--line);}
+  .m-item:last-child{border-bottom:1px solid var(--line);}
+  .m-item h4{font-size:18px; margin-bottom:8px; color:var(--lilac); font-weight:600;}
+  .m-item p{font-size:15px; color:var(--paper-2); opacity:0.85; max-width:480px;}
+
+  /* ---------- Shop ---------- */
+  .filters{display:flex; gap:10px; margin-bottom:40px; flex-wrap:wrap;}
+  .filter-btn{
+    padding:9px 20px; border:1px solid var(--line); border-radius:20px; font-size:13px; font-weight:700;
+    transition:all .15s;
+  }
+  .filter-btn.active, .filter-btn:hover{background:var(--violet); border-color:var(--violet); color:var(--bone);}
+
+  .product-grid{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:28px;
+  }
+  .product-card{
+    background:var(--plum); border:1px solid var(--line); overflow:hidden;
+    display:flex; flex-direction:column; transition:transform .18s, border-color .18s;
+  }
+  .product-card:hover{transform:translateY(-4px); border-color:var(--lilac);}
+  .product-media{
+    aspect-ratio:1/1; display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .product-media svg{width:56%; height:56%;}
+  .product-media img{width:100%; height:100%; object-fit:cover;}
+  .product-badge{
+    position:absolute; top:14px; left:14px; background:var(--gold); color:var(--ink);
+    font-size:11px; font-weight:800; padding:4px 10px; border-radius:20px;
+  }
+  .product-info{padding:20px; display:flex; flex-direction:column; gap:6px; flex:1;}
+  .product-cat{font-size:12px; color:var(--gold); font-weight:700; text-transform:uppercase; letter-spacing:0.03em;}
+  .product-info h3{font-size:19px; font-weight:600; font-family:var(--font-display);}
+  .product-bottom{display:flex; justify-content:space-between; align-items:center; margin-top:auto; padding-top:14px;}
+  .price{font-family:var(--font-display); font-size:17px; color:var(--bone);}
+  .add-btn{
+    width:38px; height:38px; border-radius:50%; background:var(--gold); color:var(--ink);
+    display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800;
+    transition:transform .15s;
+  }
+  .add-btn:hover{transform:scale(1.1) rotate(90deg);}
+
+  /* ---------- Lookbook strip ---------- */
+  .strip{
+    background:var(--ink); padding:0; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+  }
+  .strip-track{display:flex;}
+  .strip-cell{
+    flex:1; aspect-ratio:3/4; display:flex; align-items:flex-end; padding:22px; position:relative;
+    border-right:1px solid var(--line);
+  }
+  .strip-cell:last-child{border-right:none;}
+  .strip-cell span{font-family:var(--font-display); font-weight:500; font-size:16px; color:var(--bone); position:relative; z-index:2;}
+  .strip-cell::before{content:""; position:absolute; inset:0; opacity:0.9;}
+
+  /* ---------- Newsletter ---------- */
+  .cta-band{
+    background:linear-gradient(120deg, var(--violet), var(--plum-2));
+    padding:90px 32px; text-align:center;
+  }
+  .cta-band h2{font-size:clamp(28px,4.6vw,50px); max-width:720px; margin:0 auto 20px; font-weight:500;}
+  .cta-band p{color:var(--paper-2); max-width:480px; margin:0 auto 34px; opacity:0.9;}
+  .subscribe{display:flex; justify-content:center; gap:10px; max-width:440px; margin:0 auto; flex-wrap:wrap;}
+  .subscribe input{
+    flex:1; min-width:220px; padding:15px 18px; border:1.5px solid rgba(255,255,255,0.35); background:rgba(0,0,0,0.15);
+    color:var(--bone); font-size:15px; border-radius:2px;
+  }
+  .subscribe input::placeholder{color:rgba(255,255,255,0.6);}
+  .form-note{margin-top:14px; font-size:13px; color:var(--paper-2); opacity:0.75; min-height:18px;}
+
+  /* ---------- Footer ---------- */
+  footer{background:var(--ink); padding:70px 32px 30px; border-top:1px solid var(--line);}
+  .footer-grid{
+    display:grid; grid-template-columns:1.4fr repeat(3, 1fr); gap:40px; padding-bottom:50px;
+  }
+  .footer-brand p{margin-top:14px; color:var(--paper-2); opacity:0.75; font-size:14px; max-width:280px;}
+  .footer-col h5{font-size:12.5px; text-transform:uppercase; letter-spacing:0.06em; color:var(--lilac); margin-bottom:16px; font-weight:700; font-family:var(--font-body);}
+  .footer-col ul{display:flex; flex-direction:column; gap:11px; font-size:14px; opacity:0.85;}
+  .footer-col a:hover{color:var(--gold);}
+  .footer-bottom{
+    display:flex; justify-content:space-between; align-items:center; padding-top:26px;
+    border-top:1px solid var(--line); font-size:13px; opacity:0.6; flex-wrap:wrap; gap:12px;
+  }
+
+  /* ---------- Cart drawer ---------- */
+  .overlay{
+    position:fixed; inset:0; background:rgba(10,5,17,0.6); z-index:400;
+    opacity:0; pointer-events:none; transition:opacity .25s;
+  }
+  .overlay.open{opacity:1; pointer-events:auto;}
+  .cart-drawer{
+    position:fixed; top:0; right:0; height:100%; width:400px; max-width:92vw;
+    background:var(--plum); z-index:401; display:flex; flex-direction:column;
+    transform:translateX(100%); transition:transform .3s ease; border-left:1px solid var(--line);
+  }
+  .cart-drawer.open{transform:translateX(0);}
+  .cart-head{display:flex; justify-content:space-between; align-items:center; padding:24px; border-bottom:1px solid var(--line);}
+  .cart-head h3{font-size:19px; font-weight:500;}
+  .close-btn{width:34px; height:34px; border-radius:50%; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:18px;}
+  .close-btn:hover{border-color:var(--gold);}
+  .cart-items{flex:1; overflow-y:auto; padding:10px 24px;}
+  .cart-empty{padding:60px 0; text-align:center; color:var(--paper-2); opacity:0.7; font-size:14px;}
+  .cart-item{display:flex; gap:14px; padding:18px 0; border-bottom:1px solid var(--line);}
+  .cart-item .ci-media{width:64px; height:64px; background:var(--plum-2); border-radius:4px; flex-shrink:0; display:flex; align-items:center; justify-content:center;}
+  .cart-item .ci-media svg{width:70%; height:70%;}
+  .cart-item .ci-media img{width:100%; height:100%; object-fit:cover; border-radius:4px;}
+  .ci-info{flex:1; display:flex; flex-direction:column; gap:4px;}
+  .ci-info h4{font-size:14px; font-weight:700;}
+  .ci-info .ci-cat{font-size:11px; color:var(--gold); text-transform:uppercase;}
+  .ci-controls{display:flex; align-items:center; gap:10px; margin-top:4px;}
+  .qty-btn{width:22px; height:22px; border:1px solid var(--line); border-radius:50%; font-size:14px; display:flex; align-items:center; justify-content:center;}
+  .qty-btn:hover{border-color:var(--gold);}
+  .ci-remove{margin-left:auto; font-size:12px; color:var(--lilac); opacity:0.7;}
+  .ci-remove:hover{opacity:1; color:var(--gold);}
+  .ci-price{font-size:13px; font-weight:700; white-space:nowrap;}
+  .cart-foot{padding:22px 24px 28px; border-top:1px solid var(--line);}
+  .cart-subtotal{display:flex; justify-content:space-between; font-size:15px; margin-bottom:16px; font-weight:700;}
+  .checkout-fields{display:flex; flex-direction:column; gap:10px; margin-bottom:14px;}
+  .checkout-fields input{
+    padding:12px 14px; border:1px solid var(--line); background:rgba(0,0,0,0.15);
+    color:var(--bone); font-size:14px; border-radius:2px; font-family:inherit;
+  }
+  .checkout-fields input::placeholder{color:rgba(246,241,234,0.4);}
+  .checkout-error{color:#e6a3a3; font-size:12.5px; margin-bottom:10px; min-height:16px;}
+  .checkout-btn{width:100%; padding:16px; background:var(--gold); color:var(--ink); font-weight:800; font-size:15px; border-radius:2px;}
+  .checkout-btn:hover{background:var(--lilac);}
+  .checkout-btn:disabled{opacity:0.4; cursor:not-allowed;}
+
+  .toast{
+    position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--bone); color:var(--ink); padding:14px 24px; border-radius:4px; font-weight:700; font-size:14px;
+    z-index:500; opacity:0; transition:opacity .25s, transform .25s; box-shadow:0 8px 24px rgba(0,0,0,0.35);
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  /* ---------- Payment instructions modal ---------- */
+  .payment-modal{
+    position:fixed; inset:0; z-index:410; display:flex; align-items:center; justify-content:center;
+    opacity:0; pointer-events:none; transition:opacity .25s; padding:24px;
+  }
+  .payment-modal.open{opacity:1; pointer-events:auto;}
+  .payment-card{
+    background:var(--plum); border:1px solid var(--line); max-width:420px; width:100%;
+    padding:32px; position:relative; box-shadow:14px 14px 0 rgba(0,0,0,0.28);
+  }
+  .payment-card .close-btn{position:absolute; top:16px; right:16px;}
+  .payment-tag{font-size:11.5px; font-weight:700; color:var(--gold); text-transform:uppercase; letter-spacing:0.04em; display:block; margin-bottom:10px;}
+  .payment-card h3{font-size:21px; margin-bottom:10px; font-weight:500;}
+  .payment-sub{font-size:13.5px; color:var(--paper-2); opacity:0.85; margin-bottom:20px;}
+  .payment-details{background:var(--plum-2); border:1px solid var(--line); border-radius:4px; padding:16px; margin-bottom:22px; display:flex; flex-direction:column; gap:9px;}
+  .payment-row{display:flex; justify-content:space-between; gap:16px; font-size:13.5px;}
+  .payment-row span:first-child{color:var(--paper-2); opacity:0.7;}
+  .payment-row span:last-child{font-weight:700; text-align:right;}
+  .payment-card .btn{width:100%; justify-content:center; margin-bottom:10px;}
+  .payment-card .btn:last-child{margin-bottom:0;}
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:900px){
+    .nav-links{display:none;}
+    .menu-toggle{display:flex;}
+    .hero-inner{grid-template-columns:1fr;}
+    .hero-visual{justify-self:start; margin-top:20px;}
+    .manifesto-grid{grid-template-columns:1fr; gap:30px;}
+    .product-grid{grid-template-columns:repeat(2,1fr);}
+    .footer-grid{grid-template-columns:1fr 1fr; gap:34px;}
+    .strip-track{flex-wrap:wrap;}
+    .strip-cell{flex:1 1 50%; border-bottom:1px solid var(--line);}
+  }
+  @media (max-width:560px){
+    .section{padding:70px 20px;}
+    .hero{padding:70px 20px 60px;}
+    .wrap, .nav{padding-left:20px; padding-right:20px;}
+    .product-grid{grid-template-columns:1fr;}
+    .footer-grid{grid-template-columns:1fr;}
+    .subscribe{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="nav">
+    <a href="#top" class="logo">
+      <svg class="logo-mark" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4">
+        <path d="M6 6v8M6 6h8"/><path d="M34 6v8M34 6h-8"/><path d="M6 34v-8M6 34h8"/><path d="M34 34v-8M34 34h-8"/>
+      </svg>
+      <span class="logo-text">WEARIT<span>by bee</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#shop">Shop</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#lookbook">Lookbook</a></li>
+      <li><a href="#join">Contact</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="icon-btn" aria-label="Open cart" id="cartOpenBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 2-1.6L22 8H6"/><circle cx="10" cy="21" r="1"/><circle cx="18" cy="21" r="1"/></svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </div>
+  </nav>
+  <div class="marquee">
+    <div class="marquee-track" id="marqueeTrack">
+      <span>BESPOKE TAILORING &nbsp; • &nbsp; READY-TO-WEAR &nbsp; • &nbsp; ORIGINAL QUALITY FABRICS &nbsp; • &nbsp; BASED IN KANO, SHIPPING WORLDWIDE &nbsp; • </span>
+      <span>BESPOKE TAILORING &nbsp; • &nbsp; READY-TO-WEAR &nbsp; • &nbsp; ORIGINAL QUALITY FABRICS &nbsp; • &nbsp; BASED IN KANO, SHIPPING WORLDWIDE &nbsp; • </span>
+    </div>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero-inner">
+    <div>
+      <p class="hero-eyebrow">Bespoke and ready-to-wear pieces, cut from original quality fabrics in Kano.</p>
+      <h1>WEAR IT<br><em>your</em> way.</h1>
+      <p class="hero-sub">Unique ready-to-wear you won't find twice, and bespoke pieces made to your exact measurements. Every fabric is sourced for quality first — nothing about what you wear should feel like a compromise.</p>
+      <div class="hero-cta">
+        <a href="#shop" class="btn btn-solid">Shop ready-to-wear</a>
+        <a href="#join" class="btn btn-outline">Book a bespoke fitting</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-card">
+        <span class="tag">This week</span>
+        <h3>Ivory Wrap Dress</h3>
+        <p>Hand-finished in small batches. Ready to ship, or made to your measurements.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="manifesto" id="about">
+  <div class="wrap manifesto-grid">
+    <div>
+      <span class="section-num">About</span>
+      <h2>Made to be worn, not just seen.</h2>
+    </div>
+    <div class="manifesto-list">
+      <div class="m-item">
+        <h4>01 — Unique, ready to wear</h4>
+        <p>Every ready-to-wear piece is made in small numbers, so what you buy stays yours — no walking into a room in the exact same fit as someone else.</p>
+      </div>
+      <div class="m-item">
+        <h4>02 — Original quality fabrics</h4>
+        <p>We source and supply the fabric ourselves before anything is cut, so the quality is set before a single stitch goes in.</p>
+      </div>
+      <div class="m-item">
+        <h4>03 — Bespoke, on your measurements</h4>
+        <p>Want something made just for you? Book a fitting and we'll tailor it from scratch — cut, finished and delivered to fit.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="shop">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="section-num">Shop</span>
+        <h2>This season</h2>
+      </div>
+      <p>Ready-to-wear ships as-is. Bespoke pieces are made to your measurements after checkout.</p>
+    </div>
+    <div class="filters" id="filterBar">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="ready-to-wear">Ready-to-wear</button>
+      <button class="filter-btn" data-filter="bespoke">Bespoke</button>
+      <button class="filter-btn" data-filter="accessories">Accessories</button>
+    </div>
+    <div class="product-grid" id="productGrid"></div>
+  </div>
+</section>
+
+<div class="strip" id="lookbook">
+  <div class="strip-track" id="stripTrack"></div>
+</div>
+
+<section class="cta-band" id="join">
+  <div class="wrap">
+    <h2>Get new arrivals and fitting slots first.</h2>
+    <p>One email a week — new ready-to-wear drops, fabric restocks, and open slots for bespoke fittings.</p>
+    <form class="subscribe" id="subscribeForm">
+      <input type="email" placeholder="you@email.com" required aria-label="Email address">
+      <button type="submit" class="btn btn-solid">Notify me</button>
+    </form>
+    <p class="form-note" id="subscribeNote"></p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#top" class="logo">
+          <svg class="logo-mark" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4">
+            <path d="M6 6v8M6 6h8"/><path d="M34 6v8M34 6h-8"/><path d="M6 34v-8M6 34h8"/><path d="M34 34v-8M34 34h-8"/>
+          </svg>
+          <span class="logo-text">WEARIT<span>by bee</span></span>
+        </a>
+        <p>Bespoke and ready-to-wear clothing, made in Kano with original quality fabrics. Shipping from Abuja/Kano, worldwide.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Shop</h5>
+        <ul>
+          <li><a href="#shop">Ready-to-wear</a></li>
+          <li><a href="#shop">Bespoke</a></li>
+          <li><a href="#shop">Accessories</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Info</h5>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#lookbook">Lookbook</a></li>
+          <li><a href="#join">Book a fitting</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <ul>
+          <li><a href="https://wa.me/message/K4XHLC2BOKUBM1" target="_blank" rel="noopener">WhatsApp</a></li>
+          <li><a href="https://www.instagram.com/wearit_by_bee/" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a href="https://www.threads.com/@wearit_by_bee?xmt=AQG0aJBUnoSsfuG7YwfexT_oxQ0p2tfhCbtpg4Amv5_x91M" target="_blank" rel="noopener">Threads</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Wearit by Bee</span>
+      <span>Bespoke / Ready to wear, in Kano</span>
+    </div>
+  </div>
+</footer>
+
+<div class="overlay" id="overlay"></div>
+<aside class="cart-drawer" id="cartDrawer" aria-label="Shopping cart">
+  <div class="cart-head">
+    <h3>Your bag</h3>
+    <button class="close-btn" id="cartCloseBtn" aria-label="Close cart">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-foot">
+    <div class="cart-subtotal"><span>Subtotal</span><span id="cartSubtotal">$0</span></div>
+    <div class="checkout-fields">
+      <input type="text" id="checkoutName" placeholder="Full name" aria-label="Full name" autocomplete="name">
+      <input type="email" id="checkoutEmail" placeholder="you@email.com" aria-label="Email address" autocomplete="email">
+    </div>
+    <p class="checkout-error" id="checkoutError"></p>
+    <button class="checkout-btn" id="checkoutBtn" disabled>Checkout</button>
+  </div>
+</aside>
+
+<div class="toast" id="toast"></div>
+
+<div class="payment-modal" id="paymentModal">
+  <div class="payment-card">
+    <button class="close-btn" id="paymentCloseBtn" aria-label="Close">✕</button>
+    <span class="payment-tag">Order placed</span>
+    <h3 id="paymentOrderId">Order</h3>
+    <p class="payment-sub">Complete your order by transferring the amount below, then send your payment receipt on WhatsApp so we can confirm it.</p>
+    <div class="payment-details" id="paymentDetails"></div>
+    <a class="btn btn-solid" id="whatsappBtn" target="_blank" rel="noopener">Send Receipt on WhatsApp</a>
+    <button class="btn btn-outline" id="paymentDoneBtn">Done</button>
+  </div>
+</div>
+
+<script>
+// ---------- Product photo / placeholder ----------
+// Products used to render one of a handful of SVG garment icons
+// (looked up by p.icon). The catalog now carries real photos instead
+// (p.image.url, uploaded via the admin panel and hosted on Cloudinary) —
+// this renders that photo, or a plain placeholder mark for products that
+// don't have one yet.
+const placeholderIcon = `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><path d="M38 12h24l6 16-10 6 8 54H36l8-54-10-6z"/><path d="M38 12c0 6 5 10 12 10s12-4 12-10"/></svg>`;
+
+function productMedia(p){
+  if(p.image && p.image.url){
+    return `<img src="${p.image.url}" alt="${p.name}" loading="lazy">`;
+  }
+  return placeholderIcon;
+}
+
+// ---------- Product data (now served by the backend) ----------
+const API_BASE = '/api';
+let products = [];
+let currentFilter = 'all';
+
+let paymentInfo = null;
+async function loadPaymentInfo(){
+  try{
+    const res = await fetch(`${API_BASE}/payment-info`);
+    if(res.ok) paymentInfo = await res.json();
+  }catch(err){
+    console.error('Could not load payment info:', err);
+  }
+}
+loadPaymentInfo();
+
+async function loadProducts(){
+  try{
+    const res = await fetch(`${API_BASE}/products`);
+    if(!res.ok) throw new Error('Failed to load products');
+    const data = await res.json();
+    products = data.products;
+    console.log('Loaded products:', products);
+    renderProducts(currentFilter);
+  }catch(err){
+    console.error(err);
+    grid.innerHTML = '<p class="cart-empty">Couldn\'t load products right now — please refresh.</p>';
+  }
+}
+
+const stripColors = ['#7A4FB0','#271A31','#4A2E52','#38243F'];
+const stripLabels = ['READY-TO-WEAR','BESPOKE','FABRICS','ACCESSORIES'];
+
+// ---------- Render products ----------
+const grid = document.getElementById('productGrid');
+function renderProducts(filter){
+  currentFilter = filter;
+  grid.innerHTML = '';
+  products.filter(p => filter==='all' || p.cat===filter).forEach(p=>{
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    card.innerHTML = `
+      <div class="product-media" style="background:${p.color}">
+        ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
+        ${productMedia(p)}
+      </div>
+      <div class="product-info">
+        <span class="product-cat">${p.catLabel}</span>
+        <h3>${p.name}</h3>
+        <div class="product-bottom">
+          <span class="price">₦${p.price}</span>
+          <button class="add-btn" aria-label="Add ${p.name} to cart" data-id="${p.id}">+</button>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+loadProducts();
+
+document.getElementById('filterBar').addEventListener('click', e=>{
+  const btn = e.target.closest('.filter-btn');
+  if(!btn) return;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderProducts(btn.dataset.filter);
+});
+
+// ---------- Lookbook strip ----------
+const stripTrack = document.getElementById('stripTrack');
+stripLabels.forEach((label,i)=>{
+  const cell = document.createElement('div');
+  cell.className = 'strip-cell';
+  cell.style.background = `linear-gradient(160deg, ${stripColors[i]} 0%, #170F1D 130%)`;
+  cell.innerHTML = `<span>${label}</span>`;
+  stripTrack.appendChild(cell);
+});
+
+// ---------- Cart logic ----------
+let cart = [];
+const cartCountEl = document.getElementById('cartCount');
+const cartItemsEl = document.getElementById('cartItems');
+const cartSubtotalEl = document.getElementById('cartSubtotal');
+const checkoutBtn = document.getElementById('checkoutBtn');
+const overlay = document.getElementById('overlay');
+const cartDrawer = document.getElementById('cartDrawer');
+
+function findProduct(id){ return products.find(p=>p.id===id); }
+
+function addToCart(id){
+  const existing = cart.find(i=>i.id===id);
+  if(existing){ existing.qty += 1; }
+  else { cart.push({id, qty:1}); }
+  renderCart();
+  showToast(findProduct(id).name + ' added to your bag');
+  openCart();
+}
+
+function removeFromCart(id){
+  cart = cart.filter(i=>i.id!==id);
+  renderCart();
+}
+
+function changeQty(id, delta){
+  const item = cart.find(i=>i.id===id);
+  if(!item) return;
+  item.qty += delta;
+  if(item.qty<=0) removeFromCart(id);
+  renderCart();
+}
+
+function renderCart(){
+  const totalCount = cart.reduce((s,i)=>s+i.qty,0);
+  cartCountEl.textContent = totalCount;
+
+  if(cart.length===0){
+    cartItemsEl.innerHTML = '<p class="cart-empty">Your bag is empty.</p>';
+    checkoutBtn.disabled = true;
+    cartSubtotalEl.textContent = '$0';
+    return;
+  }
+
+  checkoutBtn.disabled = false;
+  cartItemsEl.innerHTML = '';
+  let subtotal = 0;
+  cart.forEach(item=>{
+    const p = findProduct(item.id);
+    subtotal += p.price * item.qty;
+    const row = document.createElement('div');
+    row.className = 'cart-item';
+    row.innerHTML = `
+      <div class="ci-media" style="background:${p.color}; color:var(--bone)">${productMedia(p)}</div>
+      <div class="ci-info">
+        <h4>${p.name}</h4>
+        <span class="ci-cat">${p.catLabel}</span>
+        <div class="ci-controls">
+          <button class="qty-btn" data-action="dec" data-id="${p.id}">−</button>
+          <span>${item.qty}</span>
+          <button class="qty-btn" data-action="inc" data-id="${p.id}">+</button>
+          <button class="ci-remove" data-action="remove" data-id="${p.id}">Remove</button>
+        </div>
+      </div>
+      <span class="ci-price">₦${p.price * item.qty}</span>
+    `;
+    cartItemsEl.appendChild(row);
+  });
+  cartSubtotalEl.textContent = '₦' + subtotal;
+}
+
+cartItemsEl.addEventListener('click', e=>{
+  const btn = e.target.closest('button[data-action]');
+  if(!btn) return;
+  const id = btn.dataset.id;
+  const action = btn.dataset.action;
+  if(action==='inc') changeQty(id, 1);
+  if(action==='dec') changeQty(id, -1);
+  if(action==='remove') removeFromCart(id);
+});
+
+document.body.addEventListener('click', e=>{
+  const btn = e.target.closest('.add-btn');
+  if(btn) addToCart(btn.dataset.id);
+});
+
+function openCart(){
+  cartDrawer.classList.add('open');
+  overlay.classList.add('open');
+}
+function closeCart(){
+  cartDrawer.classList.remove('open');
+  overlay.classList.remove('open');
+}
+document.getElementById('cartOpenBtn').addEventListener('click', openCart);
+document.getElementById('cartCloseBtn').addEventListener('click', closeCart);
+overlay.addEventListener('click', ()=>{ closeCart(); closePaymentModal(); });
+
+// ---------- Payment instructions (bank transfer + WhatsApp receipt) ----------
+const paymentModal = document.getElementById('paymentModal');
+
+function openPaymentModal(order){
+  document.getElementById('paymentOrderId').textContent = 'Order ' + order.id;
+  const details = document.getElementById('paymentDetails');
+  const whatsappBtn = document.getElementById('whatsappBtn');
+
+  if(paymentInfo){
+    details.innerHTML = `
+      <div class="payment-row"><span>Bank</span><span>${paymentInfo.bankName}</span></div>
+      <div class="payment-row"><span>Account name</span><span>${paymentInfo.accountName}</span></div>
+      <div class="payment-row"><span>Account number</span><span>${paymentInfo.accountNumber}</span></div>
+      <div class="payment-row"><span>Amount</span><span>$${order.subtotal}</span></div>
+      <div class="payment-row"><span>Reference</span><span>${order.id}</span></div>
+    `;
+    const message = encodeURIComponent(
+      `Hi! I just placed order ${order.id} on Wearit by Bee for $${order.subtotal}. Here's my payment receipt:`
+    );
+    whatsappBtn.href = `https://wa.me/${paymentInfo.whatsappNumber}?text=${message}`;
+    whatsappBtn.style.display = '';
+  } else {
+    details.innerHTML = `<p style="font-size:13px; color:var(--paper-2); opacity:0.85">
+      Payment details aren't available right now — please contact us directly to complete this order.
+    </p>`;
+    whatsappBtn.style.display = 'none';
+  }
+
+  paymentModal.classList.add('open');
+  overlay.classList.add('open');
+}
+function closePaymentModal(){
+  paymentModal.classList.remove('open');
+  overlay.classList.remove('open');
+}
+document.getElementById('paymentCloseBtn').addEventListener('click', closePaymentModal);
+document.getElementById('paymentDoneBtn').addEventListener('click', closePaymentModal);
+
+const checkoutNameEl = document.getElementById('checkoutName');
+const checkoutEmailEl = document.getElementById('checkoutEmail');
+const checkoutErrorEl = document.getElementById('checkoutError');
+
+checkoutBtn.addEventListener('click', async ()=>{
+  checkoutErrorEl.textContent = '';
+
+  const name = checkoutNameEl.value.trim();
+  const email = checkoutEmailEl.value.trim();
+  if(!name || !email){
+    checkoutErrorEl.textContent = 'Please add your name and email to check out.';
+    return;
+  }
+
+  checkoutBtn.disabled = true;
+  checkoutBtn.textContent = 'Placing order…';
+
+  try{
+    const res = await fetch(`${API_BASE}/orders`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        items: cart.map(i=>({id:i.id, qty:i.qty})),
+        customer: {name, email}
+      })
+    });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error || 'Could not place order.');
+
+    cart = [];
+    checkoutNameEl.value = '';
+    checkoutEmailEl.value = '';
+    renderCart();
+    closeCart();
+    openPaymentModal(data.order);
+  }catch(err){
+    checkoutErrorEl.textContent = err.message;
+  }finally{
+    checkoutBtn.disabled = cart.length===0;
+    checkoutBtn.textContent = 'Checkout';
+  }
+});
+
+// ---------- Toast ----------
+let toastTimer;
+function showToast(msg){
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>toast.classList.remove('show'), 2600);
+}
+
+// ---------- Newsletter ----------
+document.getElementById('subscribeForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const form = e.target;
+  const email = form.querySelector('input[type="email"]').value.trim();
+  const note = document.getElementById('subscribeNote');
+  note.textContent = 'Subscribing…';
+  try{
+    const res = await fetch(`${API_BASE}/newsletter/subscribe`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({email})
+    });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error || 'Something went wrong.');
+    note.textContent = data.message;
+    form.reset();
+  }catch(err){
+    note.textContent = err.message;
+  }
+});
+
+renderCart();
+</script>
+</body>
+</html>
